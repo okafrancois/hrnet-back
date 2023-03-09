@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}    # Add your project ID here.
+  IMAGE: ${{ secrets.GCP_APP_NAME }}
+  GKE_ZONE: us-central1
+
 jobs:
 
   deploy:
@@ -13,7 +18,7 @@ jobs:
     name: Setup Gcloud Account
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
+      IMAGE_NAME: gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE }}
     steps:
 
       - name: Login
