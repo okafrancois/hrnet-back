@@ -1,0 +1,493 @@
+swagger: '2.0'
+info:
+  title: HRnet API documentation
+  description: Contains all available API endpoints in this codebase
+  version: '1.0.0'
+  termsOfService: 'http://swagger.io/terms/'
+host: localhost:3001
+basePath: /api/v1
+schemes:
+  - http
+paths:
+  /user/login:
+    post:
+      tags:
+        - User Module
+      summary: Login
+      description: API for Login
+      parameters:
+        - in: body
+          name: body
+          description: Login Payload
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Login Successfully
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /user/signup:
+    post:
+      tags:
+        - User Module
+      summary: Signup
+      description: API for Signup
+      parameters:
+        - in: body
+          name: body
+          description: Signup Payload
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Signup Successfully
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /user/profile:
+    post:
+      security:
+        - Bearer: [ ]
+      tags:
+        - User Module
+      summary: User Profile API
+      description: API for fetching a user profile
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User profile retrieved successully
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+    put:
+      security:
+        - Bearer: [ ]
+      tags:
+        - User Module
+      summary: User Profile API
+      description: API for updating a user profile
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: body
+          name: body
+          description: Update user profile attributes
+          required: true
+          schema:
+            $ref: '#/definitions/UserProfile'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User profile retrieved successully
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /employees:
+    get:
+      tags:
+        - User Module
+      summary: Get employees
+      description: API for getting all employees in the database-sample
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: path
+          name: page
+          description: Page number
+          type: integer
+          required: true
+        - in: path
+          name: limit
+          description: Limit number
+          type: integer
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successfully got employees
+          schema:
+            $ref: '#/definitions/EmployeesResponse'
+        '400':
+          description: Invalid Fields
+        '401':
+          description: Expired or Invalid Token
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - User Module
+      summary: Create a new employee
+      description: API for creating a new employee
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: body
+          name: body
+          description: Create a new employee
+          required: true
+          schema:
+            $ref: '#/definitions/NewEmployee'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successfully created a new transaction
+          schema:
+            $ref: '#/definitions/NewEmployeeResponse'
+        '400':
+          description: Invalid Fields
+        '401':
+          description: Expired or Invalid Token
+        '500':
+          description: Internal Server Error
+    put:
+      responses:
+        '200':
+          description: Successfully updated employee
+          schema:
+            $ref: '#/definitions/UpdateEmployeeResponse'
+        '400':
+          description: Invalid Fields
+        '401':
+          description: Expired or Invalid Token
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: [ ]
+      tags:
+        - User Module
+      summary: Update employee
+      description: API for updating a user transaction
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+        - in: body
+          name: body
+          description: Update user transaction attributes
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateEmployee'
+    delete:
+      responses:
+        '200':
+          description: Successfully deleted employee
+          schema:
+            $ref: '#/definitions/DeleteEmployeeResponse'
+        '400':
+          description: Invalid Fields
+        '401':
+          description: Expired or Invalid Token
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: [ ]
+      tags:
+        - User Module
+      summary: Delete a employee
+      description: API for deleting an employee
+      parameters:
+        - in: formData
+          name: _id
+          description: The ID of the employee to delete
+          type: string
+          required: true
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          type: string
+          required: true
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  User:
+    properties:
+      email:
+        type: string
+        description: user email
+      password:
+        type: string
+        description: user password
+      firstName:
+        type: string
+        description: user first name
+      lastName:
+        type: string
+        description: user last name
+  Login:
+    properties:
+      email:
+        type: string
+        description: user email
+      password:
+        type: string
+        description: user password
+  ApiResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: object
+        properties:
+          id:
+            type: string
+          email:
+            type: string
+  LoginResponse:
+    type: object
+    properties:
+      token:
+        type: string
+  UserProfile:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+  EmployeesResponse:
+    items:
+      type: object
+      properties:
+        employees:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+              firstName:
+                type: string
+              lastName:
+                type: string
+              birthDate:
+                type: string
+              startDate:
+                type: string
+              jobTitle:
+                type: string
+              department:
+                type: string
+              street:
+                type: string
+              city:
+                type: string
+              state:
+                type: string
+              zipcode:
+                type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+              __v:
+                type: number
+              createdBy:
+                type: string
+        totalDocuments:
+          type: number
+        totalPages:
+          type: number
+        currentPage:
+          type: number
+        limit:
+          type: number
+        remainingPages:
+          type: number
+  NewEmployee:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      birthDate:
+        type: string
+      startDate:
+        type: string
+      jobTitle:
+        type: string
+      department:
+        type: string
+      street:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      zipcode:
+        type: string
+  UpdateEmployee:
+    type: object
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      birthDate:
+        type: string
+      startDate:
+        type: string
+      jobTitle:
+        type: string
+      department:
+        type: string
+      street:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      zipcode:
+        type: string
+  UpdateEmployeeResponse:
+    type: object
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      birthDate:
+        type: string
+      startDate:
+        type: string
+      jobTitle:
+        type: string
+      department:
+        type: string
+      street:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      zipcode:
+        type: string
+      createdAt:
+        type: string
+      updatedAt:
+        type: string
+      __v:
+        type: number
+      createdBy:
+        type: string
+  NewEmployeeResponse:
+    type: object
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      birthDate:
+        type: string
+      startDate:
+        type: string
+      jobTitle:
+        type: string
+      department:
+        type: string
+      street:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      zipcode:
+        type: string
+      createdAt:
+        type: string
+      updatedAt:
+        type: string
+      __v:
+        type: number
+      createdBy:
+        type: string
+  DeleteEmployeeResponse:
+    type: object
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      birthDate:
+        type: string
+      startDate:
+        type: string
+      jobTitle:
+        type: string
+      department:
+        type: string
+      street:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      zipcode:
+        type: string
+      createdAt:
+        type: string
+      updatedAt:
+        type: string
+      __v:
+        type: number
+      createdBy:
+        type: string
+  DeleteEmployee:
+    type: object
+    properties:
+      _id:
+        type: string
