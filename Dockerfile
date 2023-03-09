@@ -10,6 +10,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE $API_PORT
+EXPOSE $PORT
 
 CMD ["npm", "run", "dev:server"]
